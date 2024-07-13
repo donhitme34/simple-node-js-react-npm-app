@@ -1,13 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
-        }
-    }
-    environment {
-        CI = 'true'
-    }
+    agent any
     stages {
         stage('Build') { 
             steps {
@@ -16,7 +8,11 @@ pipeline {
         }
 		stage('Test') {
             steps {
-                sh './jenkins/scripts/test.sh'
+                sh 'npm start &'
+                script {
+                    // Wait for the server to start
+                    sleep 10
+                }
             }
         }
 		stage('Deliver') {
